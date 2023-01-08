@@ -1,0 +1,6 @@
+custom_ssh_port: 2241
+
+ssh_socket_cfg: |
+  [Socket]
+  ListenStream=
+  ListenStream={{ custom_ssh_port }}

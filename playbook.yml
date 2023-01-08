@@ -1,0 +1,19 @@
+- hosts: all
+  become: true
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: "Add sudo user"
+      import_tasks: "{{ playbook_dir }}/tasks/sudo.yml"
+      tags: apt
+    - name: "Install aptitude"
+      import_tasks: "{{ playbook_dir }}/tasks/aptitude.yml"
+      tags: apt
+    - name: "Configure SSH"
+      import_tasks: "{{ playbook_dir }}/tasks/ssh.yml"
+      tags: ssh
+    - name: "Install Docker"
+      import_tasks: "{{ playbook_dir }}/tasks/docker.yml"
+      tags: docker

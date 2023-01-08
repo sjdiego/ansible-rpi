@@ -1,0 +1,29 @@
+- name: Allow everything and enable UFW
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Set logging
+  ufw:
+    logging: 'on'
+
+- name: Restict too much connections at once
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+- name: Allow SSH port
+  ufw:
+    rule: allow
+    port: "{{ custom_ssh_port }}"
+    proto: tcp
+
+- name: Allow all access from RFC1918 networks to this host
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+  loop:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16

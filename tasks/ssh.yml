@@ -1,0 +1,41 @@
+- name: Create a ssh.socket.d configuration directory (ver >= 22.10)
+  file:
+    path: /etc/systemd/system/ssh.socket.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create a local SSH socket stream configuration (ver >= 22.10)
+  copy:
+    dest: /etc/systemd/system/ssh.socket.d/listen.conf
+    content: "{{ ssh_socket_cfg }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Update SSH configuration to be more secure.
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -t -f %s'
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: '^#?PermitRootLogin'
+      line: 'PermitRootLogin prohibit-password'
+
+- name: daemon-reload (ver >= 22.10)
+  systemd:
+    daemon_reload: yes
+
+- name: Restart the ssh socket unit after updating the SSH port number (ver >= 22.10)
+  systemd:
+    name: ssh.socket
+    state: restarted
+
+- name: Change the ansible ssh port to '{{ custom_ssh_port }}'
+  set_fact:
+    ansible_port: "{{ custom_ssh_port }}"

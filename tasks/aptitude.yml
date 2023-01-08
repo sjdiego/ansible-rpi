@@ -1,0 +1,31 @@
+- name: Update apt package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Upgrade installed apt packages
+  apt:
+    upgrade: dist
+  register: upgrade
+  retries: 15
+  delay: 5
+  until: upgrade is success
+
+- name: Ensure that a base set of software packages are installed
+  apt:
+    pkg:
+      - apt-transport-https
+      - build-essential
+      - fail2ban
+      - pwgen
+      - unbound
+      - unzip
+      - curl
+      - vim
+      - git
+      - ufw
+      - tmux
+      - htop
+      - net-tools
+    state: latest
+    update_cache: true
