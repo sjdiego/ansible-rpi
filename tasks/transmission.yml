@@ -1,0 +1,15 @@
+- name: creates Tranmission directory
+  file:
+    path: /opt/containers/transmission
+    state: directory
+
+- name: copy Transmission docker container file
+  copy:
+    src: containers/transmission/docker-compose.yml
+    dest: /opt/containers/transmission/docker-compose.yml
+
+- name: deploy Docker Compose stack
+  community.docker.docker_compose:
+    project_src: /opt/containers/transmission
+    files:
+    - docker-compose.yml

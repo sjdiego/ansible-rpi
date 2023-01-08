@@ -17,3 +17,6 @@
     - name: "Install Docker"
       import_tasks: "{{ playbook_dir }}/tasks/docker.yml"
       tags: docker
+    - name: "Install Transmission"
+      import_tasks: "{{ playbook_dir }}/tasks/transmission.yml"
+      tags: transmission
